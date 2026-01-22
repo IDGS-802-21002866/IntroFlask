@@ -1,0 +1,65 @@
+{%extends "layout.html" %} {% block content %}
+<form action="/operasBas" method="post">
+  <div class="mb-3">
+    <label for="n1" class="form-label">Numero 1:</label>
+    <input
+      type="text"
+      class="form-control"
+      id="n1"
+      name="n1"
+      value="{{ n1 or ''}}"
+    />
+  </div>
+  <div class="mb-3">
+    <label for="n2" class="form-label">Numero 2:</label>
+    <input
+      type="number"
+      class="form-control"
+      id="n2"
+      name="n2"
+      value="{{ n2 or ''}}"
+    />
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Seleccione la operacion</label>
+
+    <input
+      type="radio"
+      class="form-check-input"
+      id="sum"
+      name="operacion"
+      value="suma"
+    />
+    <label for="sum">Suma</label>
+
+    <input
+      type="radio"
+      class="form-check-input"
+      id="resta"
+      name="operacion"
+      value="resta"
+    />
+    <label for="resta">Resta</label>
+
+    <input
+      type="radio"
+      class="form-check-input"
+      id="multi"
+      name="operacion"
+      value="multiplicacion"
+    />
+    <label for="multi">Multiplicacion</label>
+
+    <input
+      type="radio"
+      class="form-check-input"
+      id="divi"
+      name="operacion"
+      value="division"
+    />
+    <label for="divi">Division</label>
+  </div>
+  <button type="submit" class="btn btn-primary">Calcular</button>
+</form>
+<h1>Resultado: {{ res or '' }}</h1>
+{% endblock %}
