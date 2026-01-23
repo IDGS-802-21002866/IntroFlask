@@ -1,4 +1,5 @@
-from ast import match_case
+from ast import If, match_case
+import math
 from flask import Flask, render_template, request
 
 
@@ -20,6 +21,10 @@ def reportes():
 @app.route("/formularios")
 def formularios():
     return render_template("formularios.html")
+
+@app.route("/alumnos")
+def alumnos():
+    return render_template("alumnos.html")
 
 
 @app.route("/hola")
@@ -87,29 +92,22 @@ def operasBas():
 
     return render_template("operasBas.html", n1=n1, n2=n2, res=res)
 
-@app.route('/resultado', methods=["GET", "POST"])
-def resultado():
-    n1 = request.form.get("n1")
-    n2 = request.form.get("n2")
-    operacion = request.form.get("operacion")
+@app.route("/distancia", methods=["GET", "POST"])
+def distancia():
+    resultado = None
+    
 
-    match(operacion):
-        case "suma":
-            return f"La suma de {n1} y {n2} es: {float(n1) + float(n2)}"
-        case "resta":
-            return f"La resta de {n1} y {n2} es: {float(n1) - float(n2)}"
-        case "multiplicacion":
-            return f"La multiplicación de {n1} y {n2} es: {float(n1) * float(n2)}"
-        case "division":
-            if float(n2) != 0:
-                return f"La división de {n1} y {n2} es: {float(n1) / float(n2)}"
-            else:
-                return "Error: División por cero no permitida."
-        case _:
-            return "Operación no válida."
+    if request.method == "POST":
+        x1 = request.form.get("x1")
+        x2 = request.form.get("x2")
+        y1 = request.form.get("y1")
+        y2 = request.form.get("y2")
 
 
-    return f"La suma de {n1} y {n2} es: {float(n1) + float(n2)}"
+        resultado = math.sqrt(math.pow(float(x2) - float(x1),2) + math.pow(float(y2) - float(y1), 2))
+        return render_template("distancia.html", resultado=resultado)
+
+    return render_template("distancia.html", resultado=resultado)
 
 if __name__ == "__main__":
     app.run(debug=True)

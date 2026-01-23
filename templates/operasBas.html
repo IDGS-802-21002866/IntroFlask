@@ -7,7 +7,7 @@
       class="form-control"
       id="n1"
       name="n1"
-      value="{{ n1 or ''}}"
+      value="{{ n1 or null}}"
     />
   </div>
   <div class="mb-3">
@@ -17,7 +17,7 @@
       class="form-control"
       id="n2"
       name="n2"
-      value="{{ n2 or ''}}"
+      value="{{ n2 or null}}"
     />
   </div>
   <div class="mb-3">
@@ -61,5 +61,5 @@
   </div>
   <button type="submit" class="btn btn-primary">Calcular</button>
 </form>
-<h1>Resultado: {{ res or '' }}</h1>
+<h1>Resultado: {{ res or null}}</h1>
 {% endblock %}
