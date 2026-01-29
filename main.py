@@ -1,8 +1,13 @@
 import math
 from flask import Flask, render_template, request
+from flask import flash
+from flask_wtf.csrf import CSRFProtect
 
+import forms
 
 app = Flask(__name__)
+app.secret_key = "Clave secreta"
+csrf = CSRFProtect()
 
 
 @app.route("/")
@@ -21,9 +26,41 @@ def reportes():
 def formularios():
     return render_template("formularios.html")
 
+
 @app.route("/alumnos")
 def alumnos():
     return render_template("alumnos.html")
+
+
+@app.route("/usuarios", methods=["POST", "GET"])
+def usuarios():
+    matricula = 0
+    nombre = ""
+    apellidoPaterno = ""
+    apellidoMaterno = ""
+    correo = ""
+
+    usuarios_class = forms.UserForm(request.form)
+
+    if request.method == "POST" and usuarios_class.validate():
+        matricula = usuarios_class.matricula.data
+        nombre = usuarios_class.nombre.data
+        apellidoPaterno = usuarios_class.apellidoPaterno.data
+        apellidoMaterno = usuarios_class.apellidoMaterno.data
+        correo = usuarios_class.correo.data
+
+        mensaje = f"Bienvenido {nombre}"
+        flash(mensaje)
+
+    return render_template(
+        "usuarios.html",
+        form=usuarios_class,
+        matricula=matricula,
+        nombre=nombre,
+        apellidoPaterno=apellidoPaterno,
+        apellidoMaterno=apellidoMaterno,
+        correo=correo,
+    )
 
 
 @app.route("/hola")
@@ -68,19 +105,21 @@ def operas():
             <input type="text" id="apellidoPaterno" name="apellidoPaterno" required>
         </form>
     """
-@app.route('/operasBas', methods=["GET", "POST"])
+
+
+@app.route("/operasBas", methods=["GET", "POST"])
 def operasBas():
     n1 = request.form.get("n1")
     n2 = request.form.get("n2")
     operacion = request.form.get("operacion")
 
-    match(operacion):
+    match (operacion):
         case "suma":
             res = float(n1) + float(n2)
-        case "resta":   
+        case "resta":
             res = float(n1) - float(n2)
         case "multiplicacion":
-            res = float(n1) * float(n2) 
+            res = float(n1) * float(n2)
         case "division":
             if float(n2) != 0:
                 res = float(n1) / float(n2)
@@ -91,10 +130,10 @@ def operasBas():
 
     return render_template("operasBas.html", n1=n1, n2=n2, res=res)
 
+
 @app.route("/distancia", methods=["GET", "POST"])
 def distancia():
     resultado = None
-    
 
     if request.method == "POST":
         x1 = request.form.get("x1")
@@ -102,11 +141,14 @@ def distancia():
         y1 = request.form.get("y1")
         y2 = request.form.get("y2")
 
-
-        resultado = math.sqrt(math.pow(float(x2) - float(x1),2) + math.pow(float(y2) - float(y1), 2))
+        resultado = math.sqrt(
+            math.pow(float(x2) - float(x1), 2) + math.pow(float(y2) - float(y1), 2)
+        )
         return render_template("distancia.html", resultado=resultado)
 
     return render_template("distancia.html", resultado=resultado)
 
+
 if __name__ == "__main__":
+    csrf.init_app(app)
     app.run(debug=True)
